@@ -12,8 +12,8 @@ parser = argparse.ArgumentParser(description='oms diffusion')
 parser.add_argument('--model_path', type=str, required=True)
 parser.add_argument('--enable_cloth_guidance', action="store_true")
 parser.add_argument('--use_independent_condition', action="store_true")
-parser.add_argument('--pipe_path', type=str, default="SG161222/Realistic_Vision_V4.0_noVAE") #stablediffusionapi/counterfeit-v30 SG161222/Realistic_Vision_V4.0_noVAE
-
+parser.add_argument('--pipe_path', type=str, default="SG161222/Realistic_Vision_V5.1_noVAE") #stablediffusionapi/counterfeit-v30 SG161222/Realistic_Vision_V4.0_noVAE
+parser.add_argument('--share', action="store_true") # share gradio to a public URL
 args = parser.parse_args()
 
 device = "cuda"
@@ -43,8 +43,8 @@ with block:
     with gr.Row():
         with gr.Column():
             cloth_image = gr.Image(label="cloth Image", type="pil")
-            cloth_mask_image = gr.Image(label="cloth mask Image, if not support, will be produced by inner segment algorithm", type="pil")
-            prompt = gr.Textbox(label="Prompt", value='a photography of a model')
+            cloth_mask_image = gr.Image(label="cloth mask Image, if not supported, will be produced by inner segment algorithm", type="pil")
+            prompt = gr.Textbox(label="Prompt", value='high quality professional photograph of a model')
             run_button = gr.Button(value="Run")
             with gr.Accordion("Advanced options", open=False):
                 num_samples = gr.Slider(label="Images", minimum=1, maximum=12, value=1, step=1)
@@ -55,7 +55,7 @@ with block:
                 cloth_guidance_scale = gr.Slider(label="Cloth guidance Scale", minimum=1, maximum=10., value=2.5, step=0.1, visible=args.enable_cloth_guidance)
                 seed = gr.Slider(label="Seed", minimum=-1, maximum=2147483647, step=1, value=1234)
                 a_prompt = gr.Textbox(label="Added Prompt", value='best quality, high quality')
-                n_prompt = gr.Textbox(label="Negative Prompt", value='bare, monochrome, lowres, bad anatomy, worst quality, low quality')
+                n_prompt = gr.Textbox(label="Negative Prompt", value='monochrome, lowres, bad anatomy, worst quality, low quality')
 
         with gr.Column():
             result_gallery = gr.Gallery(label='Output', show_label=False, elem_id="gallery")
@@ -64,4 +64,4 @@ with block:
     ips = [cloth_image, cloth_mask_image, prompt, a_prompt, n_prompt, num_samples, width, height, sample_steps, guidance_scale, cloth_guidance_scale, seed]
     run_button.click(fn=process, inputs=ips, outputs=[result_gallery, cloth_seg_image])
 
-block.launch(server_name="0.0.0.0", server_port=7860)
+block.launch(server_name="0.0.0.0", server_port=7860, share=args.share)

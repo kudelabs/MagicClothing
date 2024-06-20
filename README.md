@@ -50,6 +50,7 @@ pip install -r requirements.txt
 ```
 
 ## Inference
+[Your model path] here means the magiccloth weights (512 or 768 version)
 
 1. Python demo
 
