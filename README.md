@@ -71,7 +71,7 @@ python inference.py --cloth_path [your cloth path] --model_path [your model chec
 > 512 weights
 
 ```sh
-python gradio_generate.py --model_path [your model checkpoints path] 
+python gradio_generate.py --model_path [your model checkpoints path] --share
 ```
 
 > 768 weights
